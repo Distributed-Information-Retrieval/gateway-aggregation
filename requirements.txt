@@ -1,0 +1,3 @@
+rpyc
+fastapi
+uvicorn[standard]
