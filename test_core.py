@@ -2,7 +2,7 @@ import logging
 import typer
 
 from os.path import join
-from engine import Engine
+from retrieve_system.engine import Engine
 
 def find():
     typer.echo("Loading ...")
@@ -47,7 +47,7 @@ def test(data: str, query: str, top: int = 10):
     engine.train(data)
     typer.echo("Loaded")
     typer.echo("Running Precision test ...")
-    print(engine.find("What problems and concerns are there in making up descriptive titles? What difficulties are involved in automatically retrieving articles from approximate titles? What is the usual relevance of the content of articles to their titles?"))
+    print(engine.find("what chemical kinetic system is applicable to hypersonic aerodynamic problems ."))
     # precision = engine.test_precision(query, top)
     # typer.echo(f"Precision: {precision}")
     # typer.echo("Running Recall test ...")

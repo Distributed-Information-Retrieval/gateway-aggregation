@@ -4,9 +4,9 @@ from typing import List, Optional, cast
 import numpy as np
 from pydantic import ValidationError
 
-from models import Document, FullDocument, IndexedDocument, Model, Query
-from tokenizer import Tokenizer
-from vectorizer import Vectorizer
+from retrieve_system.models import Document, FullDocument, IndexedDocument, Model, Query
+from retrieve_system.tokenizer import Tokenizer
+from retrieve_system.vectorizer import Vectorizer
 
 
 class Engine:
@@ -68,8 +68,10 @@ class Engine:
         print("Model trained")
 
     def find(self, query: str, count: int = 10) -> List[FullDocument]:
+        print("Finding documents ...")
         query_tokens = self.tokenizer.tokenize(query, remove_stopwords=False)
         results = self.vectorizer.query(list(query_tokens))
+        print("Documents found")
         return [
             FullDocument(
                 **self.documents[index].dict(),
