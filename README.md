@@ -24,3 +24,6 @@ pip install gateway_aggregation
 ## License
 
 This project is licensed under the terms of the MIT license.
+
+### *TODO*
+- Agregar un solo server y el nodo solo actualice a los demás nodos conectados
