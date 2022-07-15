@@ -1,3 +1,4 @@
+from socket import socket
 import sys
 import time
 
@@ -69,7 +70,6 @@ class NetworkLayer():
             if obj.type == CommandType.CHANGE_DATASET:
                 # print('%s Received: from %s COMMAND CHANGE_DATASET %s' %
                 #       (self.myself, obj.args['bin_address'], obj.args['dataset']))
-                connections = obj.args['connected_node_names']
                 dataset = obj.args['dataset']
                 self.change_dataset(dataset)
 
@@ -138,21 +138,24 @@ class NetworkLayer():
 
         cmd = Command(CommandType.JOIN, {'bin_address': self.myself})
         self.socket_req.send_pyobj(cmd)
+        self.dataset = self.socket_req.recv_pyobj()
 
     def run(self):
         self.socket_rep = self.context.socket(zmq.REP)
         self.socket_rep.bind("tcp://*:%s" % self.rep_port)
         while True:
-            print('Waiting Request ...')
+            # print('Waiting Request ...')
             request: Command = self.socket_rep.recv_pyobj()
             result = None
 
             if request.type == CommandType.JOIN:
                 bin_address = request.args['bin_address']
                 self._join(bin_address)
+                result = self.dataset
+                print(self.dataset)
 
             self.socket_rep.send_pyobj(result)
-            print("Finish Request")
+            # print("Finish Request")
 
 
 if __name__ == '__main__':
