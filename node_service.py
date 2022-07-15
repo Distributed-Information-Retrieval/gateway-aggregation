@@ -1,5 +1,6 @@
 import sys
 import time
+import typer
 from layers.network_layer import NetworkLayer
 
 
@@ -37,7 +38,13 @@ def main():
         elif command == '4':
             node.change_remote_dataset(input('Enter new dataset: ')) 
         elif command == '5':
-            print(node.find(input('Enter quey: ')))
+            documents = node.find(input('Enter quey: '))
+            for document in documents:
+                typer.echo(
+                    f"Id: {document.id}, "
+                    + f"Relevancy: {document.relevancy}, "
+                    + f"Title: {document.title}",
+                )
 
 if __name__ == '__main__':
     main()

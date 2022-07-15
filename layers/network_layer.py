@@ -138,13 +138,15 @@ class NetworkLayer():
 
         cmd = Command(CommandType.JOIN, {'bin_address': self.myself})
         self.socket_req.send_pyobj(cmd)
-        self.dataset = self.socket_req.recv_pyobj()
+        datasets = self.socket_req.recv_pyobj()
+
+        if self.dataset != datasets:
+            self.change_dataset(datasets)
 
     def run(self):
         self.socket_rep = self.context.socket(zmq.REP)
         self.socket_rep.bind("tcp://*:%s" % self.rep_port)
         while True:
-            # print('Waiting Request ...')
             request: Command = self.socket_rep.recv_pyobj()
             result = None
 
@@ -152,10 +154,12 @@ class NetworkLayer():
                 bin_address = request.args['bin_address']
                 self._join(bin_address)
                 result = self.dataset
-                print(self.dataset)
+                self.socket_rep.send_pyobj(result)
 
-            self.socket_rep.send_pyobj(result)
-            # print("Finish Request")
+            if request.type == CommandType.CLIENT_REQUEST:
+                bin_address = request.args['bin_address']
+                result = self.engine.find(request.args['query'])
+                self.socket_rep.send_json(result)
 
 
 if __name__ == '__main__':
